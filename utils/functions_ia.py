@@ -4,6 +4,7 @@ Created on Thu Mar 25 11:18:47 2021
 
 @author: Luna
 """
+import os
 import pypyodbc as podbc
 import pandas as pd
 import gspread
@@ -14,12 +15,42 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from os.path import basename
 from pretty_html_table import build_table
+from imbox import Imbox # pip install imbox
+import traceback
 
 ips = {"active":'192.168.130.13' , "warehouse":"192.168.120.29"}
 users ={"active":'santio' , "warehouse":"santio"}
 passwords ={"active":'1q2w3e4r5t*' , "warehouse":"1Q2w3e4r5t*"}
 credentials = {"ia_gmail":"/home/marcos-rago/Documents/IA/utils/credentials_iamopc.json"}
 allowing_access_email =  {"ia_gmail":"ia-mopc-python@mopc-303421.iam.gserviceaccount.com"}
+
+def download_email_attachments(subject,sent_from,download_path):
+    sender = get_default_sender()
+    host = "imap.gmail.com"
+    username = sender["address"]
+    password = sender["password"]
+
+    download_folder = download_path
+
+    if not os.path.isdir(download_folder):
+        os.makedirs(download_folder, exist_ok=True)
+
+    mail = Imbox(host, username=username, password=password, ssl=True, ssl_context=None, starttls=False)
+    messages = mail.messages(subject=subject, sent_from=sent_from) # filtro por este asunto
+
+    for (uid, message) in messages:
+        mail.mark_seen(uid) # opcional, marco el mensaje como leido
+        for idx, attachment in enumerate(message.attachments):
+            try:
+                att_fn = attachment.get('filename')
+                download_path = f"{download_folder}/{att_fn}"
+                print(download_path)
+                with open(download_path, "wb") as fp:
+                    fp.write(attachment.get('content').read())
+            except:
+                print(traceback.print_exc())
+
+    mail.logout()
 
 def connect_database(base = "active"):
     try:
