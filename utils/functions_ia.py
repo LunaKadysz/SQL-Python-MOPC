@@ -134,7 +134,8 @@ def send(sender, receivers, subject, body, files):
     s.quit()
 
 def get_default_sender():
-    sender = { "address" : "datos.mopc@gmail.com" }
+    sender = {}
+    sender["address"] = "datos.mopc@gmail.com"
     sender["password"] = "datosmopc15"
     return sender
 
