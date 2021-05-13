@@ -21,7 +21,7 @@ import traceback
 ips = {"active":'192.168.130.13' , "warehouse":"192.168.120.29"}
 users ={"active":'santio' , "warehouse":"santio"}
 passwords ={"active":'1q2w3e4r5t*' , "warehouse":"1Q2w3e4r5t*"}
-credentials = {"ia_gmail":"/home/marcos-rago/Documents/IA/utils/credentials_iamopc.json"}
+credentials = {"ia_gmail":"utils/credentials_iamopc.json"}
 allowing_access_email =  {"ia_gmail":"ia-mopc-python@mopc-303421.iam.gserviceaccount.com"}
 
 def download_email_attachments(subject,sent_from,download_path):
